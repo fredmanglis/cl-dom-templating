@@ -1,4 +1,4 @@
-(in-package :ke.me.fredmanglis.cl-domt)
+(in-package cl-dom-templating)
 
 (defclass domtemplate ()
   ((file-path

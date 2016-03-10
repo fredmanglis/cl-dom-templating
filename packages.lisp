@@ -1,9 +1,10 @@
 (in-package :common-lisp-user)
 
-(defpackage :ke.me.fredmanglis.cl-domt
+(defpackage #:cl-dom-templating
   (:use :common-lisp
         :cxml
         :xpath)
+  (:nicknames #:domt)
   (:export :load-file
            :repeat
            :next
