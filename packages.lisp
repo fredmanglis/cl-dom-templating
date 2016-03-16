@@ -5,8 +5,8 @@
         :cxml
         :xpath)
   (:nicknames #:domt)
-  (:export :load-file
-           :repeat
+  (:export :repeat
            :next
            :set
-           :set-value))
+           :set-value
+           :html))
