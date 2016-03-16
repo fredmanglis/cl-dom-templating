@@ -1,4 +1,4 @@
-(in-package cl-dom-templating)
+(in-package :cl-dom-templating)
 
 (defclass domtemplate ()
   ((file-path
@@ -12,4 +12,14 @@
 
 (defmethod initialize-instance :after ((template domtemplate) &key)
   (let ((path (file-path template)))
-    (setf (slot-value template 'dom) (cxml:parse-file path (cxml-dom:make-dom-builder)))))
+    (setf (slot-value template 'dom) (cxml:parse (pathname path) (cxml-dom:make-dom-builder)))))
+
+
+(defmethod html ((template domtemplate))
+  (with-output-to-string (s)
+    (format s "~a~%~a~%"
+            "<!DOCTYPE htmlss>"
+            (dom:map-document
+             (cxml:make-string-sink :omit-xml-declaration-p t)
+             (dom template)))
+    s))
