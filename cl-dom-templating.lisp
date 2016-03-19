@@ -33,24 +33,12 @@
     s))
 
 (defmethod query ((template domtemplate) xpath)
-  (get-dom-element-by-xpath template xpath))
+  (xpath:all-nodes (xpath:evaluate xpath (dom template))))
 
 (defmethod set-value ((template domtemplate) &key xpath value)
-  (loop for element in (get-dom-element-by-xpath template xpath)
+  (loop for element in (query template xpath)
      do
        (setf (dom:node-value element) value)))
-
-(defun get-dom-element-by-xpath (template xpath)
-  (let ((nodeset (xpath:evaluate xpath (dom template))))
-    (let ((iterator (xpath:make-node-set-iterator nodeset))
-          (elements ()))
-      (loop
-         for element = (xpath:node-set-iterator-current iterator)
-         then (advance-iterator-and-return-value iterator)
-         while element
-         do
-           (setf elements (append elements (list element))))
-      elements)))
 
 (defun advance-iterator-and-return-value (iterator)
   (xpath:node-set-iterator-next iterator)
