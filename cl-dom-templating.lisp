@@ -17,7 +17,10 @@
 (defgeneric html (template)
   (:documentation "Outputs the DOM as a HTML string"))
 
-(defgeneric set-value (template &key x-path value)
+(defgeneric query (template xpath)
+  (:documentation "Returns the elements that match the passed query"))
+
+(defgeneric set-value (template &key xpath value)
   (:documentation "Updates the value of the elements matching the given xpath expression"))
 
 (defmethod html ((template domtemplate))
@@ -29,13 +32,16 @@
              (dom template)))
     s))
 
-(defmethod set-value ((template domtemplate) &key x-path value)
-  (loop for element in (get-dom-element-by-xpath template x-path)
+(defmethod query ((template domtemplate) xpath)
+  (get-dom-element-by-xpath template xpath))
+
+(defmethod set-value ((template domtemplate) &key xpath value)
+  (loop for element in (get-dom-element-by-xpath template xpath)
      do
        (setf (dom:node-value element) value)))
 
-(defun get-dom-element-by-xpath (template x-path)
-  (let ((nodeset (xpath:evaluate x-path (dom template))))
+(defun get-dom-element-by-xpath (template xpath)
+  (let ((nodeset (xpath:evaluate xpath (dom template))))
     (let ((iterator (xpath:make-node-set-iterator nodeset))
           (elements ()))
       (loop
@@ -55,5 +61,6 @@
         (new-child (dom:create-text-node (dom:owner-document self) newval)))
     (loop for i from 0 upto (- (length child-nodes) 1)
        do
-         (vector-pop child-nodes))
-    (vector-push new-child child-nodes)))
+         (let ((old-child (elt child-nodes 0)))
+           (dom:remove-child self old-child)))
+    (dom:append-child self new-child)))
