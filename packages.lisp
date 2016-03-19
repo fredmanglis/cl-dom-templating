@@ -5,8 +5,9 @@
         :cxml
         :xpath)
   (:nicknames #:domt)
-  (:export :repeat
-           :next
-           :set
+  (:export :html
            :set-value
-           :html))
+           :query
+           :remove
+           :repeat
+           :next))
