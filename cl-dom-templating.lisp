@@ -49,3 +49,11 @@
 (defun advance-iterator-and-return-value (iterator)
   (xpath:node-set-iterator-next iterator)
   (xpath:node-set-iterator-current iterator))
+
+(defmethod (setf dom:node-value) :after (newval (self dom:element))
+  (let ((child-nodes (dom:child-nodes self))
+        (new-child (dom:create-text-node (dom:owner-document self) newval)))
+    (loop for i from 0 upto (- (length child-nodes) 1)
+       do
+         (vector-pop child-nodes))
+    (vector-push new-child child-nodes)))
